@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GMMConnect</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f0f2f5}
+.header{background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px #0002}
+.top1{display:flex;justify-content:space-between;align-items:center;padding:10px 12px}
+.logo{font-weight:900;font-size:26px;color:#8b2cf0}
+.nav{display:flex;justify-content:space-around;padding:8px;border-top:1px solid #eee}
+.nav div{padding:8px 16px;border-radius:20px;font-size:20px;cursor:pointer}
+.nav div.active{background:#f3e8ff}
+.storyRow{display:flex;gap:8px;overflow:auto;padding:10px;background:#fff;margin-bottom:8px}
+.story{width:105px;height:170px;border-radius:12px;flex-shrink:0;background:#ddd;background-size:cover;position:relative;display:flex;align-items:end;padding:6px;color:#fff;font-weight:bold;font-size:12px}
+.card{background:#fff;margin-bottom:8px;padding:12px;border-radius:8px}
+.btn{width:100%;background:linear-gradient(90deg,#7c3aed,#ec4899);color:#fff;border:none;padding:14px;border-radius:25px;font-weight:bold;font-size:16px;margin-top:8px}
+.page{display:none}.page.show{display:block}
+textarea{width:100%;border:none;background:#f0f2f5;border-radius:20px;padding:12px;font-size:15px;outline:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="top1">
+<div class="logo">gmmconnect</div>
+<div style="display:flex;gap:8px">
+<div style="width:36px;height:36px;background:#e4e6eb;border-radius:50%;display:flex;align-items:center;justify-content:center" onclick="alert('Create new post - scroll down!')">+</div>
+<div style="width:36px;height:36px;background:#e4e6eb;border-radius:50%;display:flex;align-items:center;justify-content:center" onclick="alert('Search: Type name to search')">🔍</div>
+<div style="width:36px;height:36px;background:#e4e6eb;border-radius:50%;display:flex;align-items:center;justify-content:center" onclick="alert('Menu - Share app: https://jsbin.com/quqijinuga/quiet')">☰</div>
+</div>
+</div>
+<div class="nav">
+<div class="active" onclick="openPage('home',this)">🏠</div>
+<div onclick="openPage('friends',this)">👥</div>
+<div onclick="openPage('chat',this)">💬</div>
+<div onclick="openPage('notif',this)">🔔</div>
+<div onclick="openPage('watch',this)">🎬</div>
+</div>
+</div>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page show">
+<div class="storyRow">
+<div class="story" style="background-image:url(https://picsum.photos/105/170?1);background-color:#fff;border:1px solid #ddd"><div style="color:#000;text-align:center;width:100%;background:#fff;padding:4px;border-radius:0 0 12px 12px;margin:-6px">+ Create story</div></div>
+<div class="story" style="background-image:url(https://picsum.photos/105/170?2)">Daniel Joel</div>
+<div class="story" style="background-image:url(https://picsum.photos/105/170?3)">Jeunpelumi</div>
+</div>
+
+<div class="card">
+<div style="display:flex;gap:8px">
+<div style="width:40px;height:40px;border-radius:50%;background:#8b2cf0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold">C</div>
+<textarea id="myText" rows="2" placeholder="What's on your mind, Charlotte?"></textarea>
+</div>
+<input type="file" id="myPhoto" accept="image/*" style="margin-top:10px">
+<button class="btn" onclick="makePost()">Post</button>
+</div>
+
+<div id="myFeed"></div>
+</div>
+
+<!-- FRIENDS PAGE -->
+<div id="friendsPage" class="page">
+<div class="card"><h3>Friends Requests</h3>
+<p style="margin-top:10px">👩 Ada Loveth - <button onclick="this.innerText='Added ✓'" style="padding:6px 12px;background:#8b2cf0;color:#fff;border:none;border-radius:20px">Confirm</button></p>
+<p style="margin-top:10px">👨 Sammy Jay - <button onclick="this.innerText='Added ✓'" style="padding:6px 12px;background:#8b2cf0;color:#fff;border:none;border-radius:20px">Confirm</button></p>
+</div>
+</div>
+
+<!-- CHAT PAGE -->
+<div id="chatPage" class="page">
+<div class="card">
+<h3>Chats</h3>
+<div style="padding:10px;background:#f0f2f5;border-radius:10px;margin:10px 0" onclick="alert('Chat with Daniel - Type below!')">Daniel Joel: Hey Charlotte! 😊</div>
+<div style="padding:10px;background:#f0f2f5;border-radius:10px" onclick="alert('Chat with Ada')">Ada: Your app is fine! 💜</div>
+<div style="margin-top:15px;display:flex;gap:8px">
+<input id="chatText" placeholder="Type message..." style="flex:1;padding:12px;border-radius:20px;border:none;background:#f0f2f5">
+<button onclick="sendChat()" style="padding:10px 18px;background:#8b2cf0;color:#fff;border:none;border-radius:20px">Send</button>
+</div>
+<div id="chatArea" style="margin-top:10px"></div>
+</div>
+</div>
+
+<!-- NOTIF PAGE -->
+<div id="notifPage" class="page">
+<div class="card"><h3>Notifications</h3><p style="margin-top:10px">👍 Daniel liked your post - 2m ago</p><p style="margin-top:8px">💬 Ada commented - 5m ago</p></div>
+</div>
+
+<!-- WATCH PAGE -->
+<div id="watchPage" class="page">
+<div class="card"><h3>Funny Videos</h3><video controls style="width:100%;border-radius:10px;margin-top:10px" src="https://www.w3schools.com/html/mov_bbb.mp4"></video><p style="margin-top:8px"><button onclick="alert('You liked! 👍')" style="padding:8px 14px;border:none;background:#e4e6eb;border-radius:20px">👍 Like</button> <button onclick="alert('Nice video! 😂')" style="padding:8px 14px;border:none;background:#e4e6eb;border-radius:20px">💬 Comment</button></p></div>
+</div>
+
+<script>
+let posts = [];
+function openPage(name, el){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+document.getElementById(name+'Page').classList.add('show');
+document.querySelectorAll('.nav div').forEach(d=>d.classList.remove('active'));
+if(el) el.classList.add('active');
+}
+
+function makePost(){
+let text = document.getElementById('myText').value;
+let photoInput = document.getElementById('myPhoto');
+let file = photoInput.files[0];
+
+if(!text &&!file){
+alert('Type something first!');
+return;
+}
+
+if(file){
+let reader = new FileReader();
+reader.onload = function(e){
+let imgTag = '<img src="'+e.target.result+'" style="width:100%;border-radius:10px;margin-top:10px">';
+posts.unshift({text: text, img: imgTag});
+showPosts();
+};
+reader.readAsDataURL(file);
+} else {
+posts.unshift({text: text, img: ''});
+showPosts();
+}
+
+document.getElementById('myText').value = '';
+photoInput.value = '';
+}
+
+function showPosts(){
+let feed = document.getElementById('myFeed');
+feed.innerHTML = '';
+for(let i=0;i<posts.length;i++){
+let p = posts[i];
+feed.innerHTML += '<div class="card"><b>Charlotte</b> • Just now • 🌍<br><br>'+p.text+p.img+'<br><br><div style="display:flex;gap:10px"><span onclick="this.innerHTML=\'👍 Liked\'">👍 Like</span> <span onclick="alert(\'Comment!\')">💬 Comment</span> <span>↗️ Share</span></div></div>';
+}
+}
+
+function sendChat(){
+let t = document.getElementById('chatText').value;
+if(!t) return;
+document.getElementById('chatArea').innerHTML += '<div style="padding:8px 12px;background:linear-gradient(90deg,#7c3aed,#ec4899);color:#fff;border-radius:18px;margin:6px 0;max-width:70%;margin-left:auto">'+t+'</div>';
+document.getElementById('chatText').value = '';
+}
+</script>
+</body>
+</html>
